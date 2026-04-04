@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RENDIR · Sistema Fase 1 v2.2</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+<style>
+:root{--nv:#0D1B2A;--bl:#1A5E9A;--bll:#E8F0FA;--md:#555;--lt:#999;--rl:#DDD;--of:#F8F8F8;--gn:#2A6040;--gb:#EAF4EE;--am:#7A5200;--ab:#FFF8E1;--or:#B84A00;--ob:#FFF0E6;--rd:#8B1A00;--rb:#FDEEEA}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#eef0f4;color:var(--nv)}
+.bar{background:var(--nv);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{font-size:18px;font-weight:bold;color:white;letter-spacing:2px}
+.logo-s{font-size:10px;color:rgba(255,255,255,.4);display:block}
+.tabs{display:flex;gap:3px;margin-left:20px}
+.tab{padding:7px 18px;border:none;cursor:pointer;font-family:Arial,sans-serif;font-size:12px;font-weight:bold;border-radius:5px}
+.tab.on{background:var(--bl);color:white}
+.tab.off{background:rgba(255,255,255,.1);color:rgba(255,255,255,.55)}
+.main{max-width:1060px;margin:0 auto;padding:24px 20px 80px}
+.card{background:white;border-radius:10px;border:.5px solid var(--rl);padding:20px 22px;margin-bottom:18px}
+.ch{font-size:14px;font-weight:bold;color:var(--nv);margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--rl);display:flex;align-items:center;justify-content:space-between}
+.cs{font-size:11px;color:var(--lt);font-weight:normal;margin-left:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px}
+.f{display:flex;flex-direction:column;gap:5px}
+label{font-size:12px;font-weight:bold;color:var(--nv)}
+input,select,textarea{border:1px solid var(--rl);border-radius:6px;padding:7px 10px;font-size:13px;color:var(--nv);font-family:Arial,sans-serif;outline:none;transition:border .15s;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--bl)}
+textarea{resize:vertical;min-height:80px}
+.blocks{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin:10px 0}
+.blk{display:flex;flex-direction:column;align-items:center;gap:4px}
+.blk label{font-size:11px;font-weight:bold;text-align:center;line-height:1.2}
+.blk input{text-align:center;width:58px;padding:7px 4px;font-size:16px;font-weight:bold}
+.blk .mx{font-size:10px;color:var(--lt)}
+.blk.ctx label{color:var(--bl)}
+.iec-res{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:14px}
+.ic{border-radius:8px;padding:12px;text-align:center}
+.ic .lbl{font-size:11px;color:var(--md);margin-bottom:4px}
+.ic .val{font-size:20px;font-weight:bold}
+.ic .sub{font-size:11px;color:var(--lt);margin-top:2px}
+.lp{background:var(--gb)}.lp .val{color:var(--gn)}
+.lm{background:var(--ab)}.lm .val{color:var(--am)}
+.la{background:var(--ob)}.la .val{color:var(--or)}
+.lc{background:var(--rb)}.lc .val{color:var(--rd)}
+.ln{background:var(--of)}.ln .val{color:var(--md)}
+.dr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.db{border-radius:8px;padding:12px 14px;border:1px solid var(--rl)}
+.db .dl{font-size:11px;color:var(--lt);margin-bottom:4px}
+.db .dv{font-size:15px;font-weight:bold;color:var(--nv)}
+.db .dt{font-size:12px;color:var(--md);margin-top:3px}
+.per-g{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+.pi{display:flex;flex-direction:column;align-items:center;gap:4px}
+.pi label{font-size:10px;text-align:center;color:var(--am)}
+.pi input{text-align:center;width:52px;padding:6px;font-size:14px;font-weight:bold;border-color:var(--ab)}
+.ps{font-size:13px;font-weight:bold;margin-top:6px;padding:8px 14px;border-radius:6px;text-align:center;background:var(--of)}
+.al{padding:10px 14px;border-radius:6px;font-size:13px;margin-top:8px}
+.alw{background:var(--ob);color:var(--or);border:1px solid var(--or)}
+.alc{background:var(--rb);color:var(--rd);border:1px solid var(--rd)}
+.ali{background:var(--bll);color:var(--bl);border:1px solid var(--bl)}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.tag{font-size:12px;padding:4px 10px;border:1px solid var(--rl);border-radius:4px;cursor:pointer;color:var(--md);user-select:none}
+.tag.on{border-color:var(--bl);background:var(--bll);color:var(--nv);font-weight:bold}
+.btn{padding:10px 22px;border:none;border-radius:7px;font-size:13px;font-weight:bold;cursor:pointer;font-family:Arial,sans-serif}
+.bp{background:var(--nv);color:white}.bp:hover{background:var(--bl)}.bp:disabled{background:var(--rl);color:var(--lt);cursor:not-allowed}
+.bs{background:transparent;color:var(--md);border:1px solid var(--rl)}.bs:hover{border-color:var(--nv);color:var(--nv)}
+.bg{background:var(--gb);color:var(--gn);border:1px solid var(--gn)}.bg:hover{background:var(--gn);color:white}
+.br{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;align-items:center}
+.out{background:var(--of);border:1px solid var(--rl);border-radius:8px;padding:18px;margin-top:14px;min-height:100px;white-space:pre-wrap;font-size:13px;color:var(--nv);line-height:1.8}
+.outl{display:flex;align-items:center;justify-content:center;color:var(--lt);font-style:italic}
+.ioe-g{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.ioe-d{border:1px solid var(--rl);border-radius:6px;padding:10px 12px}
+.ioe-d label{font-size:11px;font-weight:bold;color:var(--nv);display:block;margin-bottom:5px}
+.ioe-d input{width:80px;text-align:center}
+.ioet{font-size:13px;font-weight:bold;color:var(--nv);margin-top:10px;padding:10px 14px;background:var(--of);border-radius:6px}
+.ev-l{display:flex;flex-direction:column;gap:8px}
+.ev-i{border:1px solid var(--rl);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:12px;background:white}
+.ei{font-size:20px;font-weight:bold;width:48px;text-align:center;border-radius:6px;padding:6px 4px}
+.ein{flex:1}
+.en{font-size:13px;font-weight:bold}
+.em{font-size:11px;color:var(--lt);margin-top:2px}
+.eb{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap}
+.badge{font-size:10px;padding:2px 7px;border-radius:3px;font-weight:bold}
+.note{font-size:12px;color:var(--lt);font-style:italic;margin-bottom:10px}
+.hidden{display:none}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div style="display:flex;align-items:center;gap:4px">
+    <div><span class="logo">RENDIR</span><span class="logo-s">ALTO RENDIMIENTO EJECUTIVO</span></div>
+    <div class="tabs">
+      <button class="tab on" onclick="setTab('ind')">Análisis Individual</button>
+      <button class="tab off" onclick="setTab('comp')">Vista Comparativa</button>
+      <button class="tab off" onclick="setTab('cfg')">Configuración</button>
+    </div>
+  </div>
+  <span style="font-size:11px;color:rgba(255,255,255,.3)">Sistema v2.2 · Fase 1 · Uso interno</span>
+</div>
+
+<div class="main">
+
+<!-- CONFIG -->
+<div id="tab-cfg" class="hidden">
+  <div class="card">
+    <div class="ch">Conexión con Google Sheets</div>
+    <div class="ali al" style="display:block;margin-bottom:14px">
+      <strong>Script de Apps Script — pega esto en Extensiones → Apps Script de tu hoja:</strong>
+      <pre style="font-size:11px;background:white;padding:10px;border-radius:4px;margin-top:8px;white-space:pre-wrap;color:#333">function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName(data.hoja) || ss.insertSheet(data.hoja);
+  if(sheet.getLastRow() === 0) sheet.appendRow(data.headers);
+  sheet.appendRow(data.row);
+  return ContentService.createTextOutput(JSON.stringify({ok:true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+function doGet(e) {
+  return ContentService.createTextOutput(JSON.stringify({ok:true}))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+    </div>
+    <p style="font-size:12px;color:var(--md);margin-bottom:12px">Después de pegar el script: <strong>Implementar → Nueva implementación → Aplicación web → Acceso: Cualquier persona</strong>. Copia la URL y pégala aquí.</p>
+    <div style="display:flex;gap:10px;align-items:flex-end">
+      <div class="f" style="flex:1"><label>URL del script de Google Sheets</label><input type="text" id="sh-url" placeholder="https://script.google.com/macros/s/..."></div>
+      <button class="btn bg" onclick="saveCfg()">Guardar</button>
+      <button class="btn bs" onclick="testConn()">Probar</button>
+      <span id="conn-st" style="font-size:12px;padding:4px 10px;border-radius:4px;background:var(--of);color:var(--lt);font-weight:bold">Sin configurar</span>
+    </div>
+  </div>
+</div>
+
+<!-- INDIVIDUAL -->
+<div id="tab-ind">
+  <div class="card">
+    <div class="ch">Datos del evaluado</div>
+    <div class="g3" style="margin-bottom:12px">
+      <div class="f"><label>Nombre completo</label><input id="nombre" type="text" placeholder="Nombre del directivo"></div>
+      <div class="f"><label>Empresa</label><input id="empresa" type="text" placeholder="Empresa"></div>
+      <div class="f"><label>Cargo / Rol</label><input id="cargo" type="text" placeholder="Cargo"></div>
+    </div>
+    <div class="g4">
+      <div class="f"><label>Sector</label>
+        <select id="sector"><option value="">Selecciona...</option><option>Tecnología</option><option>Banca y finanzas</option><option>Consultoría</option><option>Industria</option><option>Salud</option><option>Retail</option><option>Inmobiliario</option><option>Legal</option><option>Educación</option><option>Logística</option><option>Energía</option><option>Otro</option></select>
+      </div>
+      <div class="f"><label>Tamaño empresa</label>
+        <select id="tamano"><option value="">Selecciona...</option><option>1-10</option><option>11-50</option><option>51-200</option><option>201-500</option><option>+500</option></select>
+      </div>
+      <div class="f"><label>Antigüedad en el rol</label>
+        <select id="antig"><option value="">Selecciona...</option><option>Menos de 6 meses</option><option>6-12 meses</option><option>1-3 años</option><option>3-5 años</option><option>Más de 5 años</option></select>
+      </div>
+      <div class="f"><label>Fecha</label><input id="fecha" type="date"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch">Resultados del IEC <span class="cs">Introduce las puntuaciones por bloque</span></div>
+    <p class="note">CTX: introduce la suma directa (0-20). La inversión CTX_carga = 20 - CTX se aplica automáticamente.</p>
+    <div class="blocks">
+      <div class="blk"><label>EXP</label><input type="number" id="bEXP" min="0" max="20" placeholder="0" oninput="recalc()"><span class="mx">/20</span></div>
+      <div class="blk"><label>FRA</label><input type="number" id="bFRA" min="0" max="20" placeholder="0" oninput="recalc()"><span class="mx">/20</span></div>
+      <div class="blk"><label>AMB</label><input type="number" id="bAMB" min="0" max="20" placeholder="0" oninput="recalc()"><span class="mx">/20</span></div>
+      <div class="blk"><label>TEM</label><input type="number" id="bTEM" min="0" max="20" placeholder="0" oninput="recalc()"><span class="mx">/20</span></div>
+      <div class="blk"><label>RES</label><input type="number" id="bRES" min="0" max="20" placeholder="0" oninput="recalc()"><span class="mx">/20</span></div>
+      <div class="blk"><label>EMO</label><input type="number" id="bEMO" min="0" max="20" placeholder="0" oninput="recalc()"><span class="mx">/20</span></div>
+      <div class="blk ctx"><label>CTX<br><small>suma directa</small></label><input type="number" id="bCTX" min="0" max="20" placeholder="0" oninput="recalc()"><span class="mx">/20</span></div>
+    </div>
+    <div class="iec-res hidden" id="iec-res">
+      <div class="ic ln" id="cIEC"><div class="lbl">IEC</div><div class="val" id="vIEC">-</div><div class="sub">/100</div></div>
+      <div class="ic ln" id="cNivel"><div class="lbl">Nivel de demanda</div><div class="val" id="vNivel" style="font-size:13px">-</div><div class="sub" id="vTag">-</div></div>
+      <div class="ic ln"><div class="lbl">Patron dominante</div><div class="val" id="vPat" style="font-size:14px;color:var(--nv)">-</div><div class="sub" id="vPatN">-</div></div>
+      <div class="ic ln"><div class="lbl">CTX_carga</div><div class="val" id="vCtx" style="color:var(--bl)">-</div><div class="sub">20 - CTX</div></div>
+    </div>
+    <div class="dr hidden" id="disp-row">
+      <div class="db"><div class="dl">Dispersion total (7 bloques)</div><div class="dv" id="vDT">-</div><div class="dt" id="vDTT">-</div></div>
+      <div class="db" style="border-color:var(--bll)"><div class="dl">Dispersion pura (6 demandas)</div><div class="dv" id="vDP">-</div><div class="dt" id="vDPT">-</div></div>
+    </div>
+    <div id="al-disp" class="hidden ali al"></div>
+  </div>
+
+  <div class="card">
+    <div class="ch">Contexto personal - PER <span class="cs">No entra en el IEC · Solo evaluador</span></div>
+    <p class="note">0 = no aplica. PER-5 es modulador independiente - no se suma con PER-1 a PER-4.</p>
+    <div class="per-g">
+      <div class="pi"><label>PER-1<br>Salud</label><input type="number" id="per1" min="0" max="4" placeholder="0" oninput="calcPER()"></div>
+      <div class="pi"><label>PER-2<br>Familiar</label><input type="number" id="per2" min="0" max="4" placeholder="0" oninput="calcPER()"></div>
+      <div class="pi"><label>PER-3<br>Cambio vital</label><input type="number" id="per3" min="0" max="4" placeholder="0" oninput="calcPER()"></div>
+      <div class="pi"><label>PER-4<br>Economico</label><input type="number" id="per4" min="0" max="4" placeholder="0" oninput="calcPER()"></div>
+      <div class="pi"><label style="color:var(--or)">PER-5<br>Global<br><small>(modulador)</small></label><input type="number" id="per5" min="0" max="4" placeholder="0" oninput="calcPER()" style="border-color:var(--or)"></div>
+    </div>
+    <div class="ps" id="per-sum">PER circunstancias: -/16 · PER-5: - · Nivel: -</div>
+    <div id="per-al" class="hidden"></div>
+    <div class="f" style="margin-top:12px"><label>PER-6 - Texto libre del evaluado</label><textarea id="per6" placeholder="Transcribe si el evaluado escribio algo..."></textarea></div>
+    <div class="f" style="margin-top:10px"><label>Clasificacion PER-6</label>
+      <select id="per6cls"><option value="">Sin texto libre</option><option value="informativo">Informativo</option><option value="significativo">Significativo - modifica la interpretacion</option><option value="atencion">Requiere atencion - momento puede no ser adecuado</option></select>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ch">IOE - Contexto organizacional <span class="cs">Solo si es encargo de empresa</span></div>
+    <p class="note">Dejar vacio si es un directivo individual sin encargo de empresa.</p>
+    <div class="ioe-g">
+      <div class="ioe-d"><label>D1 - Modelo de liderazgo (0-12)</label><input type="number" id="iD1" min="0" max="12" placeholder="0" oninput="calcIOE()"></div>
+      <div class="ioe-d"><label>D2 - Diseno del trabajo (0-12)</label><input type="number" id="iD2" min="0" max="12" placeholder="0" oninput="calcIOE()"></div>
+      <div class="ioe-d"><label>D3 - Cultura de urgencia (0-12)</label><input type="number" id="iD3" min="0" max="12" placeholder="0" oninput="calcIOE()"></div>
+      <div class="ioe-d"><label>D4 - Error y seguridad psicologica (0-12)</label><input type="number" id="iD4" min="0" max="12" placeholder="0" oninput="calcIOE()"></div>
+      <div class="ioe-d"><label>D5 - Recuperacion organizacional (0-12)</label><input type="number" id="iD5" min="0" max="12" placeholder="0" oninput="calcIOE()"></div>
+      <div class="ioe-d"><label>D6 - Momento organizacional (0-12)</label><input type="number" id="iD6" min="0" max="12" placeholder="0" oninput="calcIOE()"></div>
+    </div>
+    <div class="ioet" id="ioe-tot">IOE total: - / 72 · No aplica</div>
+  </div>
+
+  <div class="card">
+    <div class="ch">Observaciones clinicas de la entrevista</div>
+    <div class="g2">
+      <div>
+        <label style="margin-bottom:8px;display:block">Senales observadas</label>
+        <div class="tags">
+          <span class="tag" onclick="toggleTag(this)">Habla del error en abstracto</span>
+          <span class="tag" onclick="toggleTag(this)">Minimiza la carga</span>
+          <span class="tag" onclick="toggleTag(this)">Justifica al liderazgo sin que preguntaras</span>
+          <span class="tag" onclick="toggleTag(this)">No puede identificar cuando descango</span>
+          <span class="tag" onclick="toggleTag(this)">Senales de autocensura</span>
+          <span class="tag" onclick="toggleTag(this)">Algo personal que no quiso desarrollar</span>
+          <span class="tag" onclick="toggleTag(this)">Describe deterioro sin identificarlo</span>
+          <span class="tag" onclick="toggleTag(this)">Expectativas no realistas</span>
+          <span class="tag" onclick="toggleTag(this)">Urgencia mayor de lo que presenta</span>
+          <span class="tag" onclick="toggleTag(this)">Problema parece organizacional</span>
+        </div>
+      </div>
+      <div class="f">
+        <label style="margin-bottom:8px;display:block">Origen del riesgo principal</label>
+        <select id="origen"><option value="">Selecciona...</option><option value="individual">Individual</option><option value="organizacional">Organizacional</option><option value="mixto">Mixto</option><option value="personal">Personal</option></select>
+      </div>
+    </div>
+    <div class="f" style="margin-top:14px"><label>Notas clinicas</label><textarea id="notas" rows="4" placeholder="Lo que observaste en la entrevista..."></textarea></div>
+  </div>
+
+  <div class="card">
+    <div class="ch">Generar analisis y exportar</div>
+    <div class="br">
+      <button class="btn bp" id="btn-gen" onclick="generar()">Generar analisis con IA</button>
+      <button class="btn bg" onclick="exportSheets()">Guardar en Google Sheets</button>
+      <button class="btn bs" onclick="addComp()">Anadir al comparativo</button>
+      <button class="btn bs" onclick="limpiar()">Limpiar</button>
+    </div>
+    <div id="out-area" class="hidden">
+      <div id="out-txt" class="out"></div>
+      <div style="margin-top:14px;padding:12px 14px;background:var(--of);border-radius:8px;border:1px solid var(--rl)">
+        <p style="font-size:12px;font-weight:bold;color:var(--nv);margin-bottom:10px">Descargar informe Word</p>
+        <div class="br" style="margin-top:0">
+          <button class="btn bp" onclick="dlWord('directivo')">&#128100; Versión directivo</button>
+          <button class="btn bs" onclick="dlWord('empresa')">&#127970; Versión empresa</button>
+          <button class="btn bs" onclick="copiar()">Copiar texto</button>
+        </div>
+        <p style="font-size:11px;color:var(--lt);margin-top:8px">Directivo: informe completo con gráfico de bloques y secciones clínicas. Empresa: resumen ejecutivo sin datos del instrumento ni información personal.</p>
+      </div>
+    </div>
+    <div id="sh-msg" class="hidden ali al" style="margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- COMPARATIVO -->
+<div id="tab-comp" class="hidden">
+  <div class="card">
+    <div class="ch">Equipo directivo <span class="cs" id="comp-cnt">0 evaluados</span></div>
+    <p class="note">Anade evaluados desde el analisis individual. El analisis organizacional se activa con 3 o mas personas.</p>
+    <div class="ev-l" id="ev-list"><div style="text-align:center;color:var(--lt);padding:32px;font-size:13px">Todavia no hay evaluados.</div></div>
+  </div>
+  <div id="card-org" class="card hidden">
+    <div class="ch">Analisis organizacional</div>
+    <div class="br">
+      <button class="btn bp" id="btn-org" onclick="genOrg()">Generar analisis organizacional</button>
+      <button class="btn bg" onclick="exportOrgSheets()">Guardar en Google Sheets</button>
+    </div>
+    <div id="out-org-area" class="hidden">
+      <div id="out-org" class="out"></div>
+      <div class="br">
+        <button class="btn bp" onclick="dlWordOrg()">Descargar informe Word</button>
+        <button class="btn bs" onclick="copiarOrg()">Copiar texto</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+
+const S = {
+  evs: [],
+  cfg: { url: localStorage.getItem('rendir_url') || '' },
+  calc: null,
+  per: null,
+  ioe: null,
+  last: null,
+  lastOrg: null
+};
+
+const BKS = ['EXP','FRA','AMB','TEM','RES','EMO'];
+const BN = {
+  EXP:'Exposicion Ejecutiva', FRA:'Fragmentacion Analitica',
+  AMB:'Ambiguedad Estrategica', TEM:'Presion Temporal',
+  RES:'Responsabilidad Sostenida', EMO:'Carga Relacional',
+  CTX:'Contexto Organizacional'
+};
+const RD = {
+  EXP:'N, E, R (regulacion)', FRA:'E, N, R5 (recuperacion)',
+  AMB:'I, D, R (regulacion)', TEM:'N, R, R5',
+  RES:'R, I, E (energia)', EMO:'E, R5, N',
+  CTX:'Amplificacion organizacional - modifica todos los bloques'
+};
+
+if (S.cfg.url) document.getElementById('sh-url').value = S.cfg.url;
+document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+
+
+function setTab(t) {
+  ['ind','comp','cfg'].forEach(function(id) {
+    document.getElementById('tab-' + id).classList.toggle('hidden', id !== t);
+  });
+  document.querySelectorAll('.tab').forEach(function(el, i) {
+    el.className = 'tab ' + (['ind','comp','cfg'][i] === t ? 'on' : 'off');
+  });
+  if (t === 'comp') renderComp();
+}
+
+function gv(id) {
+  return Math.min(20, Math.max(0, parseInt(document.getElementById(id).value) || 0));
+}
+function gvp(id) {
+  return Math.min(4, Math.max(0, parseInt(document.getElementById(id).value) || 0));
+}
+function gvi(id) {
+  return Math.min(12, Math.max(0, parseInt(document.getElementById(id).value) || 0));
+}
+
+function dlabel(d) {
+  return d <= 6 ? 'Carga difusa' : d <= 12 ? 'Carga mixta' : 'Carga concentrada';
+}
+function lvlCls(iec) {
+  return iec <= 24 ? 'lp' : iec <= 49 ? 'lm' : iec <= 74 ? 'la' : 'lc';
+}
+function lvlTag(iec) {
+  return iec <= 24 ? 'Baja demanda' : iec <= 49 ? 'Demanda moderada' : iec <= 74 ? 'Alta demanda' : 'Demanda critica';
+}
+function lvlNivel(iec) {
+  return iec <= 24 ? 'Entorno de baja demanda' : iec <= 49 ? 'Entorno de demanda moderada' : iec <= 74 ? 'Entorno de alta demanda' : 'Entorno de demanda critica';
+}
+function lvlBg(iec) {
+  return iec <= 24 ? 'var(--gb)' : iec <= 49 ? 'var(--ab)' : iec <= 74 ? 'var(--ob)' : 'var(--rb)';
+}
+function lvlFg(iec) {
+  return iec <= 24 ? 'var(--gn)' : iec <= 49 ? 'var(--am)' : iec <= 74 ? 'var(--or)' : 'var(--rd)';
+}
+function lvlFgHex(iec) {
+  return iec <= 24 ? '2A6040' : iec <= 49 ? '7A5200' : iec <= 74 ? 'B84A00' : '8B1A00';
+}
+function lvlBgHex(iec) {
+  return iec <= 24 ? 'EAF4EE' : iec <= 49 ? 'FFF8E1' : iec <= 74 ? 'FFF0E6' : 'FDEEEA';
+}
+
+function toggleTag(el) { el.classList.toggle('on'); }
+function getTags() {
+  return Array.from(document.querySelectorAll('.tag.on')).map(function(t) { return t.textContent; });
+}
+
+function saveCfg() {
+  var url = document.getElementById('sh-url').value.trim();
+  S.cfg.url = url;
+  localStorage.setItem('rendir_url', url);
+  alert('URL guardada.');
+}
+
+function testConn() {
+  var url = document.getElementById('sh-url').value.trim();
+  if (!url) { alert('Introduce la URL primero.'); return; }
+  var st = document.getElementById('conn-st');
+  fetch(url).then(function(r) { return r.json(); }).then(function(d) {
+    st.textContent = d.ok ? 'Conectado' : 'Error';
+    st.style.background = d.ok ? 'var(--gb)' : 'var(--rb)';
+    st.style.color = d.ok ? 'var(--gn)' : 'var(--rd)';
+  }).catch(function() {
+    st.textContent = 'Error';
+    st.style.background = 'var(--rb)';
+    st.style.color = 'var(--rd)';
+  });
+}
+
+function copiar() {
+  navigator.clipboard.writeText(document.getElementById('out-txt').textContent).then(function() { alert('Copiado.'); });
+}
+function copiarOrg() {
+  navigator.clipboard.writeText(document.getElementById('out-org').textContent).then(function() { alert('Copiado.'); });
+}
+
+
+function recalc() {
+  var b = {
+    EXP: gv('bEXP'), FRA: gv('bFRA'), AMB: gv('bAMB'),
+    TEM: gv('bTEM'), RES: gv('bRES'), EMO: gv('bEMO')
+  };
+  b.CTX_suma = gv('bCTX');
+  b.CTX_carga = 20 - b.CTX_suma;
+
+  var vals = BKS.map(function(k) { return b[k]; });
+  if (vals.every(function(v) { return v === 0; }) && b.CTX_carga === 20) {
+    document.getElementById('iec-res').classList.add('hidden');
+    document.getElementById('disp-row').classList.add('hidden');
+    return;
+  }
+
+  var total = BKS.reduce(function(s, k) { return s + b[k]; }, 0) + b.CTX_carga;
+  var iec = Math.round((total / 140) * 100);
+
+  var all7 = {
+    EXP: b.EXP, FRA: b.FRA, AMB: b.AMB,
+    TEM: b.TEM, RES: b.RES, EMO: b.EMO, CTX: b.CTX_carga
+  };
+  var maxV = Math.max.apply(null, Object.values(all7));
+  var minV = Math.min.apply(null, Object.values(all7));
+  var dom = Object.keys(all7).filter(function(k) { return all7[k] === maxV; });
+  var patCode = dom.join('+');
+  var patName = dom.map(function(k) { return BN[k]; }).join(' + ');
+
+  var dt = maxV - minV;
+  var pureVals = BKS.map(function(k) { return b[k]; });
+  var dp = Math.max.apply(null, pureVals) - Math.min.apply(null, pureVals);
+
+  var dispAlert = '';
+  if (dt >= 13 && dp >= 13) dispAlert = 'Carga concentrada de rol. Predice P3, P4, P6 o P7.';
+  else if (dt >= 13 && dp <= 6) dispAlert = 'La concentracion viene del contexto organizacional. CTX es el amplificador dominante.';
+  else if (dt <= 6 && dp <= 6) dispAlert = 'Carga difusa. Predice P2 o P5.';
+
+  document.getElementById('vIEC').textContent = iec;
+  document.getElementById('vNivel').textContent = lvlNivel(iec);
+  document.getElementById('vTag').textContent = lvlTag(iec);
+  document.getElementById('vPat').textContent = patCode;
+  document.getElementById('vPatN').textContent = patName;
+  document.getElementById('vCtx').textContent = b.CTX_carga;
+  document.getElementById('cNivel').className = 'ic ' + lvlCls(iec);
+  document.getElementById('iec-res').classList.remove('hidden');
+  document.getElementById('vDT').textContent = dt + ' pts';
+  document.getElementById('vDTT').textContent = dlabel(dt);
+  document.getElementById('vDP').textContent = dp + ' pts';
+  document.getElementById('vDPT').textContent = dlabel(dp) + ' (solo demandas)';
+  document.getElementById('disp-row').classList.remove('hidden');
+
+  var alD = document.getElementById('al-disp');
+  if (dispAlert) {
+    alD.textContent = dispAlert;
+    alD.className = 'ali al';
+    alD.classList.remove('hidden');
+  } else {
+    alD.classList.add('hidden');
+  }
+
+  S.calc = {
+    b: b, total: total, iec: iec,
+    nivel: lvlNivel(iec), tag: lvlTag(iec),
+    patCode: patCode, patName: patName,
+    dt: dt, dp: dp,
+    dLabel: dlabel(dt), dpLabel: dlabel(dp),
+    dispAlert: dispAlert
+  };
+}
+
+function calcPER() {
+  var p1 = gvp('per1'), p2 = gvp('per2'), p3 = gvp('per3'), p4 = gvp('per4'), p5 = gvp('per5');
+  var sum = p1 + p2 + p3 + p4;
+  var alarm4 = Math.max(p1, p2, p3, p4) === 4;
+
+  var nivel;
+  if (sum <= 4 && p5 <= 2) nivel = 'Sin carga significativa';
+  else if (sum <= 4 && p5 >= 3) nivel = 'ALERTA: agotamiento sin circunstancias especificas';
+  else if (sum <= 9) nivel = 'Carga moderada';
+  else if (sum <= 16 && p5 <= 2) nivel = 'Carga alta con recursos';
+  else nivel = 'CARGA ALTA SIN RECURSOS';
+
+  document.getElementById('per-sum').textContent =
+    'PER circunstancias: ' + sum + '/16 · PER-5: ' + p5 + ' · Nivel: ' + nivel;
+
+  var alerts = [];
+  if (sum <= 4 && p5 >= 3) alerts.push('PER-5 = ' + p5 + ': agotamiento sin circunstancias concretas. Senal clinica prioritaria.');
+  if (alarm4) alerts.push('Item PER con puntuacion 4: circunstancia de impacto maximo activa.');
+  if (sum >= 10 && p5 >= 3) alerts.push('Carga alta SIN recursos: valorar si el momento es adecuado para la evaluacion RENDIR.');
+
+  var al = document.getElementById('per-al');
+  if (alerts.length) {
+    al.innerHTML = alerts.join('<br>');
+    al.className = (sum >= 10 && p5 >= 3) ? 'alc al' : 'alw al';
+    al.classList.remove('hidden');
+  } else {
+    al.classList.add('hidden');
+  }
+
+  S.per = { p1: p1, p2: p2, p3: p3, p4: p4, p5: p5, sum: sum, nivel: nivel, alarm4: alarm4 };
+}
+
+function calcIOE() {
+  var dims = [1,2,3,4,5,6].map(function(i) { return gvi('iD' + i); });
+  var total = dims.reduce(function(a, v) { return a + v; }, 0);
+  if (!total) {
+    document.getElementById('ioe-tot').textContent = 'IOE total: - / 72 · No aplica (directivo individual)';
+    S.ioe = null;
+    return;
+  }
+  var nivel = total <= 18 ? 'Bajo' : total <= 36 ? 'Moderado' : total <= 54 ? 'Alto' : 'Critico';
+  var maxD = Math.max.apply(null, dims);
+  var dnames = ['D1 Liderazgo','D2 Diseno','D3 Urgencia','D4 Error/Seguridad','D5 Recuperacion','D6 Momento'];
+  var critica = maxD >= 9 ? dnames[dims.indexOf(maxD)] : null;
+  document.getElementById('ioe-tot').textContent =
+    'IOE total: ' + total + '/72 · Nivel: ' + nivel + (critica ? ' · Dimension critica: ' + critica : '');
+  S.ioe = { dims: dims, total: total, nivel: nivel, critica: critica };
+}
+
+
+function exportSheets() {
+  if (!S.calc) { alert('Calcula el IEC primero.'); return; }
+  var url = S.cfg.url;
+  if (!url) { alert('Configura la URL de Google Sheets en la pestana Configuracion.'); return; }
+
+  var id = 'EV-' + Date.now();
+  var b = S.calc.b;
+  var per = S.per || { p1:0, p2:0, p3:0, p4:0, p5:0, sum:0, nivel:'Sin datos' };
+  var ioe = S.ioe || { total:0, dims:[0,0,0,0,0,0], nivel:'', critica:'' };
+  var nombre = document.getElementById('nombre').value;
+  var empresa = document.getElementById('empresa').value;
+  var cargo = document.getElementById('cargo').value;
+  var fecha = document.getElementById('fecha').value;
+
+  var h1 = ['ID','Fecha','Nombre','Empresa','Cargo','Sector','Tamano','Antiguedad','IEC','Nivel','Clasificacion','Patron','Disp.total','Disp.pura','PER-1','PER-2','PER-3','PER-4','PER-5 mod','PER suma','Origen','IOE total','EXP','FRA','AMB','TEM','RES','EMO','CTX suma','CTX carga','Senales','Notas','Perfil RENDIR'];
+  var r1 = [id,fecha,nombre,empresa,cargo,
+    document.getElementById('sector').value,
+    document.getElementById('tamano').value,
+    document.getElementById('antig').value,
+    S.calc.iec, S.calc.nivel, S.calc.tag, S.calc.patCode,
+    S.calc.dt, S.calc.dp,
+    per.p1, per.p2, per.p3, per.p4, per.p5, per.sum,
+    document.getElementById('origen').value,
+    ioe.total, b.EXP, b.FRA, b.AMB, b.TEM, b.RES, b.EMO,
+    b.CTX_suma, b.CTX_carga,
+    getTags().join('; '),
+    document.getElementById('notas').value, ''];
+
+  var h2 = ['ID_ev','Fecha','EXP','FRA','AMB','TEM','RES','EMO','CTX_suma','CTX_carga','IEC','Nivel','Patron','Disp.total','Disp.pura'];
+  var r2 = [id,fecha,b.EXP,b.FRA,b.AMB,b.TEM,b.RES,b.EMO,b.CTX_suma,b.CTX_carga,S.calc.iec,S.calc.nivel,S.calc.patCode,S.calc.dt,S.calc.dp];
+
+  var promises = [
+    fetch(url, { method:'POST', body: JSON.stringify({ hoja:'EVALUADOS', headers:h1, row:r1 }) }),
+    fetch(url, { method:'POST', body: JSON.stringify({ hoja:'IEC_BLOQUES', headers:h2, row:r2 }) })
+  ];
+
+  if (ioe.total > 0) {
+    var h3 = ['ID_emp','Empresa','Sector','Tamano','D1','D2','D3','D4','D5','D6','IOE_total','IOE_nivel','Dim_critica','Fecha','Evaluados'];
+    var r3 = ['EMP-' + Date.now(), empresa,
+      document.getElementById('sector').value,
+      document.getElementById('tamano').value
+    ].concat(ioe.dims).concat([ioe.total, ioe.nivel, ioe.critica || '', fecha, id]);
+    promises.push(fetch(url, { method:'POST', body: JSON.stringify({ hoja:'EMPRESAS', headers:h3, row:r3 }) }));
+  }
+
+  Promise.all(promises).then(function() {
+    var m = document.getElementById('sh-msg');
+    m.textContent = 'Datos guardados en Google Sheets correctamente.';
+    m.classList.remove('hidden');
+    S.lastId = id;
+  }).catch(function(e) {
+    alert('Error al guardar: ' + e.message);
+  });
+}
+
+function exportOrgSheets() {
+  if (!S.evs.length) { alert('No hay evaluados.'); return; }
+  var url = S.cfg.url;
+  if (!url) { alert('Configura la URL de Google Sheets.'); return; }
+  var avgB = function(k) {
+    return Math.round(S.evs.reduce(function(s, e) { return s + (e.b && e.b[k] ? e.b[k] : 0); }, 0) / S.evs.length * 10) / 10;
+  };
+  var avgCtx = Math.round(S.evs.reduce(function(s, e) { return s + (e.b && e.b.CTX_carga ? e.b.CTX_carga : 0); }, 0) / S.evs.length * 10) / 10;
+  var avgIEC = Math.round(S.evs.reduce(function(s, e) { return s + e.iec; }, 0) / S.evs.length);
+  var h = ['ID_grupo','Empresa','N_evaluados','IEC_medio','EXP_med','FRA_med','AMB_med','TEM_med','RES_med','EMO_med','CTX_med','Fecha','Evaluados'];
+  var r = ['GRP-' + Date.now(), S.evs[0].empresa || '', S.evs.length, avgIEC,
+    avgB('EXP'), avgB('FRA'), avgB('AMB'), avgB('TEM'), avgB('RES'), avgB('EMO'), avgCtx,
+    new Date().toISOString().split('T')[0],
+    S.evs.map(function(e) { return e.nombre; }).join('; ')];
+  fetch(url, { method:'POST', body: JSON.stringify({ hoja:'COMPARATIVOS', headers:h, row:r }) })
+    .then(function() { alert('Guardado en Google Sheets.'); })
+    .catch(function(e) { alert('Error: ' + e.message); });
+}
+
+
+function generar() {
+  if (!S.calc) { alert('Introduce las puntuaciones del IEC primero.'); return; }
+  var b = S.calc.b;
+  var per = S.per || { sum:0, p5:0, nivel:'Sin datos', alarm4:false };
+  var ioe = S.ioe;
+  var nombre = document.getElementById('nombre').value || 'el directivo';
+  var empresa = document.getElementById('empresa').value || '';
+  var cargo = document.getElementById('cargo').value || '';
+  var notas = document.getElementById('notas').value || '';
+  var origen = document.getElementById('origen').value || '';
+  var per6 = document.getElementById('per6').value || '';
+  var per6cls = document.getElementById('per6cls').value || '';
+  var tags = getTags();
+  var ioeStr = ioe && ioe.total > 0
+    ? ioe.total + '/72 · ' + ioe.nivel + (ioe.critica ? ' · Critica: ' + ioe.critica : '')
+    : 'No aplica';
+
+  var prompt = 'Eres Catalina Heredia Ranho, creadora del metodo RENDIR. Genera el texto base del informe individual de Analisis de Contexto Fase 1.
+
+'
+    + 'EVALUADO: ' + nombre + ' · ' + cargo + ' · ' + empresa + '
+
+'
+    + 'IEC v2.1:
+'
+    + 'Nivel: ' + S.calc.nivel + ' (' + S.calc.tag + ')
+'
+    + 'Bloques: EXP ' + b.EXP + ' · FRA ' + b.FRA + ' · AMB ' + b.AMB
+    + ' · TEM ' + b.TEM + ' · RES ' + b.RES + ' · EMO ' + b.EMO + ' · CTX_carga ' + b.CTX_carga + '
+'
+    + 'Patron: ' + S.calc.patCode + ' — ' + S.calc.patName + '
+'
+    + 'Dimensiones RENDIR: ' + (RD[S.calc.patCode.split('+')[0]] || RD.EXP) + '
+'
+    + 'Dispersion total: ' + S.calc.dt + ' pts (' + S.calc.dLabel + ')'
+    + ' · Dispersion pura: ' + S.calc.dp + ' pts (' + S.calc.dpLabel + ')
+'
+    + (S.calc.dispAlert ? 'Lectura dispersion: ' + S.calc.dispAlert + '
+' : '')
+    + '
+PER: circunstancias ' + per.sum + '/16 · PER-5 modulador: ' + per.p5 + ' · Nivel: ' + per.nivel + '
+'
+    + (per.alarm4 ? 'Item PER con puntuacion 4 activo.
+' : '')
+    + (per6 ? 'Texto libre (' + per6cls + '): ' + per6 + '
+' : '')
+    + '
+IOE: ' + ioeStr + '
+'
+    + '
+Senales: ' + (tags.length ? tags.join('; ') : 'Ninguna') + '
+'
+    + 'Origen riesgo: ' + (origen || 'No especificado') + '
+'
+    + 'Notas entrevista: ' + (notas || 'Sin notas') + '
+
+'
+    + 'INSTRUCCIONES CRITICAS: El IEC mide la carga del entorno, NO el estado cognitivo. NUNCA uses riesgo, deterioro, comprometido o interferencia. Usa siempre: las condiciones estan presentes, no sabemos sin RENDIR, el entorno genera una demanda. Crea incertidumbre bien gestionada.
+
+'
+    + 'FORMATO — primera persona, tono ejecutivo, sin mencionar el numero IEC, maximo 600 palabras:
+
+'
+    + 'DIAGNOSTICO DE CONTEXTO
+'
+    + '[2-3 frases que describen que exige este entorno. Solo condiciones objetivas del rol. Sin diagnosticar el estado cognitivo.]
+
+'
+    + 'PERFIL DE CARGA COGNITIVA
+'
+    + '[Describe el patron de demanda: que tipo de exigencia domina, como se distribuye la carga, que dimensiones cognitivas estan mas expuestas. Sin decir si la persona aguanta o no.]
+
+'
+    + 'CONTEXTO AMPLIFICADOR
+'
+    + '[Solo si PER sum>=5 o PER-5>=3 o IOE>36. Describir como amplifica la demanda. Sin datos personales. Si no aplica, omitir completamente.]
+
+'
+    + 'SENALES OBSERVADAS EN ENTREVISTA
+'
+    + '[Solo si hay observaciones relevantes. Formular como hipotesis, no como diagnostico.]
+
+'
+    + 'LO QUE LA EVALUACION RENDIR ENCONTRARA
+'
+    + '[Las preguntas que el IEC abre y no puede responder. No sabemos si el sistema cognitivo esta compensando, adaptandose o deteriorandose. 2-3 preguntas especificas para este caso.]
+
+'
+    + 'PROPUESTA DE VALORACION
+'
+    + '[Una frase que justifique la evaluacion RENDIR desde la incertidumbre: vale la pena saber con precision como esta respondiendo el sistema cognitivo a este nivel de demanda. No decir que algo falla.]';
+
+  var btn = document.getElementById('btn-gen');
+  btn.disabled = true;
+  btn.textContent = 'Generando...';
+  document.getElementById('out-area').classList.remove('hidden');
+  var ot = document.getElementById('out-txt');
+  ot.className = 'out outl';
+  ot.textContent = 'Analizando y generando el informe...';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  }).then(function(r) {
+    return r.json();
+  }).then(function(d) {
+    var text = d.content.map(function(c) { return c.text || ''; }).join('');
+    ot.className = 'out';
+    ot.textContent = text;
+    S.last = {
+      text: text, nombre: nombre, empresa: empresa, cargo: cargo,
+      iec: S.calc.iec, nivel: S.calc.nivel, tag: S.calc.tag,
+      patCode: S.calc.patCode, patName: S.calc.patName,
+      dt: S.calc.dt, dp: S.calc.dp,
+      dLabel: S.calc.dLabel, dpLabel: S.calc.dpLabel,
+      b: S.calc.b, per: S.per || {}, ioe: S.ioe || null,
+      origen: origen, tags: tags
+    };
+  }).catch(function(e) {
+    ot.className = 'out';
+    ot.textContent = 'Error: ' + e.message;
+  }).finally(function() {
+    btn.disabled = false;
+    btn.textContent = 'Generar analisis con IA';
+  });
+}
+
+function genOrg() {
+  if (S.evs.length < 3) { alert('Necesitas al menos 3 evaluados.'); return; }
+  var emp = S.evs[0].empresa || 'la empresa';
+  var resumen = S.evs.map(function(e) {
+    return e.nombre + ' (' + e.cargo + '): IEC ' + e.iec + ' · ' + e.nivel
+      + ' · Patron ' + e.patCode + ' · PER: ' + (e.per ? e.per.nivel : '-')
+      + ' · Riesgo: ' + (e.origen || '-');
+  }).join('\n');
+
+  var avgB = function(k) {
+    return Math.round(S.evs.reduce(function(s, e) {
+      return s + (e.b && e.b[k] ? e.b[k] : 0);
+    }, 0) / S.evs.length * 10) / 10;
+  };
+  var avgCtx = Math.round(S.evs.reduce(function(s, e) {
+    return s + (e.b && e.b.CTX_carga ? e.b.CTX_carga : 0);
+  }, 0) / S.evs.length * 10) / 10;
+  var avgs = { EXP:avgB('EXP'), FRA:avgB('FRA'), AMB:avgB('AMB'), TEM:avgB('TEM'), RES:avgB('RES'), EMO:avgB('EMO'), CTX:avgCtx };
+  var crit = Object.keys(avgs).filter(function(k) { return avgs[k] >= 14; });
+  var ioeEvs = S.evs.filter(function(e) { return e.ioe && e.ioe.total > 0; });
+
+  var prompt = 'Eres Catalina Heredia Ranho, creadora del metodo RENDIR. Genera el analisis organizacional Fase 1.
+
+'
+    + 'EMPRESA: ' + emp + ' · ' + S.evs.length + ' directivos evaluados
+
+'
+    + 'EVALUADOS:
+' + resumen + '
+
+'
+    + 'MEDIAS POR BLOQUE:
+'
+    + Object.keys(avgs).map(function(k) { return k + ': ' + avgs[k] + '/20'; }).join(' · ') + '
+'
+    + 'Bloques criticos (media >= 14/20): ' + (crit.length ? crit.join(', ') : 'Ninguno') + '
+'
+    + (ioeEvs.length ? 'IOE: ' + ioeEvs[0].ioe.total + '/72 · ' + ioeEvs[0].ioe.nivel : 'IOE no disponible') + '
+
+'
+    + 'INSTRUCCIONES CRITICAS: Foco en el diseno organizacional, no en el estado de las personas. NUNCA riesgo personal ni deterioro. Argumento central: tomar decisiones con informacion y proteger el activo directivo.
+
+'
+    + 'FORMATO — tono ejecutivo, maximo 500 palabras:
+
+'
+    + 'PERFIL DE DEMANDA ORGANIZACIONAL
+[Sintesis del nivel de exigencia que genera esta organizacion sobre su equipo directivo. Sin diagnosticar personas.]
+
+'
+    + 'PATRONES SISTEMICOS IDENTIFICADOS
+[Bloques altos y fallos estructurales. Si no hay, decirlo.]
+
+'
+    + 'DIRECTIVOS EN ENTORNO DE ALTA DEMANDA
+[Quienes con IEC >= 50. Que tienen en comun en terminos de diseno del rol, no de estado personal.]
+
+'
+    + 'DIAGNOSTICO ORGANIZACIONAL
+[Una frase sobre el origen de la carga: diseno del rol, cultura o momento. Sin diagnosticar personas.]
+
+'
+    + 'PROPUESTA PARA LA EMPRESA
+[Por que vale la pena la evaluacion RENDIR. Argumentar desde la gestion estrategica: tomar decisiones con informacion, proteger el activo directivo.];
+
+  var btn = document.getElementById('btn-org');
+  btn.disabled = true;
+  btn.textContent = 'Generando...';
+  document.getElementById('out-org-area').classList.remove('hidden');
+  var ot = document.getElementById('out-org');
+  ot.className = 'out outl';
+  ot.textContent = 'Generando analisis organizacional...';
+
+  fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 1000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  }).then(function(r) {
+    return r.json();
+  }).then(function(d) {
+    var text = d.content.map(function(c) { return c.text || ''; }).join('');
+    ot.className = 'out';
+    ot.textContent = text;
+    S.lastOrg = { text: text, empresa: emp, evs: S.evs.slice() };
+  }).catch(function(e) {
+    ot.className = 'out';
+    ot.textContent = 'Error: ' + e.message;
+  }).finally(function() {
+    btn.disabled = false;
+    btn.textContent = 'Generar analisis organizacional';
+  });
+}
+
+
+function addComp() {
+  if (!S.calc) { alert('Calcula el IEC primero.'); return; }
+  var ev = {
+    nombre: document.getElementById('nombre').value || 'Sin nombre',
+    empresa: document.getElementById('empresa').value || '',
+    cargo: document.getElementById('cargo').value || '',
+    iec: S.calc.iec,
+    nivel: S.calc.nivel,
+    tag: S.calc.tag,
+    patCode: S.calc.patCode,
+    patName: S.calc.patName,
+    dt: S.calc.dt,
+    dp: S.calc.dp,
+    dLabel: S.calc.dLabel,
+    dpLabel: S.calc.dpLabel,
+    b: S.calc.b,
+    per: S.per || null,
+    ioe: S.ioe || null,
+    origen: document.getElementById('origen').value,
+    tags: getTags(),
+    texto: document.getElementById('out-txt').textContent || ''
+  };
+  S.evs.push(ev);
+  alert(ev.nombre + ' anadido al comparativo. Total: ' + S.evs.length);
+  document.getElementById('card-org').classList.toggle('hidden', S.evs.length < 3);
+}
+
+function renderComp() {
+  document.getElementById('comp-cnt').textContent = S.evs.length + ' evaluados';
+  var el = document.getElementById('ev-list');
+  if (!S.evs.length) {
+    el.innerHTML = '<div style="text-align:center;color:var(--lt);padding:32px;font-size:13px">Todavia no hay evaluados.</div>';
+    document.getElementById('card-org').classList.add('hidden');
+    return;
+  }
+  el.innerHTML = S.evs.map(function(e, i) {
+    return '<div class="ev-i">'
+      + '<div class="ei" style="background:' + lvlBg(e.iec) + ';color:' + lvlFg(e.iec) + '">' + e.iec + '</div>'
+      + '<div class="ein">'
+      + '<div class="en">' + e.nombre + '</div>'
+      + '<div class="em">' + e.cargo + (e.empresa ? ' · ' + e.empresa : '') + '</div>'
+      + '<div class="eb">'
+      + '<span class="badge" style="background:' + lvlBg(e.iec) + ';color:' + lvlFg(e.iec) + '">' + e.tag + '</span>'
+      + '<span class="badge" style="background:var(--bll);color:var(--bl)">' + e.patCode + '</span>'
+      + (e.per && e.per.sum >= 5 ? '<span class="badge" style="background:var(--ab);color:var(--am)">PER: ' + e.per.nivel + '</span>' : '')
+      + (e.origen ? '<span class="badge" style="background:var(--of);color:var(--md)">Riesgo: ' + e.origen + '</span>' : '')
+      + '</div></div>'
+      + '<button class="btn bs" style="font-size:11px;padding:5px 10px" onclick="removeEv(' + i + ')">Eliminar</button>'
+      + '</div>';
+  }).join('');
+  document.getElementById('card-org').classList.toggle('hidden', S.evs.length < 3);
+}
+
+function removeEv(i) {
+  S.evs.splice(i, 1);
+  renderComp();
+}
+
+function limpiar() {
+  if (!confirm('Limpiar todos los datos del evaluado actual?')) return;
+  document.querySelectorAll('input, textarea, select').forEach(function(el) {
+    if (el.type !== 'date') el.value = '';
+  });
+  document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('.tag.on').forEach(function(el) { el.classList.remove('on'); });
+  document.getElementById('iec-res').classList.add('hidden');
+  document.getElementById('disp-row').classList.add('hidden');
+  document.getElementById('al-disp').classList.add('hidden');
+  document.getElementById('per-sum').textContent = 'PER circunstancias: -/16 · PER-5: - · Nivel: -';
+  document.getElementById('per-al').classList.add('hidden');
+  document.getElementById('ioe-tot').textContent = 'IOE total: - / 72 · No aplica';
+  document.getElementById('out-area').classList.add('hidden');
+  document.getElementById('sh-msg').classList.add('hidden');
+  S.calc = null; S.per = null; S.ioe = null; S.last = null; S.lastOrg = null;
+}
+
+
+function parseSections(text) {
+  var names = [
+    'DIAGNOSTICO DE CONTEXTO',
+    'PERFIL DE CARGA COGNITIVA',
+    'CONTEXTO AMPLIFICADOR',
+    'SENALES OBSERVADAS EN ENTREVISTA',
+    'LO QUE LA EVALUACION RENDIR ENCONTRARA',
+    'PROPUESTA DE VALORACION',
+    'PERFIL ORGANIZACIONAL',
+    'PATRONES SISTEMICOS IDENTIFICADOS',
+    'EVALUADOS EN ZONA DE RIESGO',
+    'DIAGNOSTICO ORGANIZACIONAL',
+    'PROPUESTA PARA LA EMPRESA'
+  ];
+  var sec = {};
+  var cur = null;
+  function normalize(s) {
+    return s.toUpperCase()
+      .replace(/[ÁÀÂÄ]/g,'A').replace(/[ÉÈÊË]/g,'E')
+      .replace(/[ÍÌÎÏ]/g,'I').replace(/[ÓÒÔÖ]/g,'O')
+      .replace(/[ÚÙÛÜ]/g,'U').replace(/Ñ/g,'N');
+  }
+  text.split('\n').forEach(function(line) {
+    var found = null;
+    var normLine = normalize(line.trim());
+    names.forEach(function(n) {
+      if (normLine.indexOf(n) >= 0) found = n;
+    });
+    if (found) { cur = found; sec[found] = []; }
+    else if (cur && line.trim()) sec[cur].push(line.trim());
+  });
+  return function(n) { return sec[n] ? sec[n].join(' ') : ''; };
+}
+
+function mkDocx(children) {
+  var D = docx;
+  var NO = { style: D.BorderStyle.NONE, size: 0, color: 'FFFFFF' };
+  var TH = { style: D.BorderStyle.SINGLE, size: 2, color: 'DDDDDD' };
+  var BLB = { style: D.BorderStyle.SINGLE, size: 4, color: '1A5E9A' };
+  var NVB = { style: D.BorderStyle.SINGLE, size: 4, color: '0D1B2A' };
+
+  function rn(t, s, c) { return new D.TextRun({ text: t || '', font: 'Arial', size: s || 18, color: c || '555555' }); }
+  function rb(t, s, c) { return new D.TextRun({ text: t || '', font: 'Arial', size: s || 18, color: c || '0D1B2A', bold: true }); }
+  function ri(t, s, c) { return new D.TextRun({ text: t || '', font: 'Arial', size: s || 15, color: c || '999999', italics: true }); }
+  function sp(n) { return new D.Paragraph({ spacing: { after: n || 80 }, children: [] }); }
+  function pp(runs, after, align) {
+    var r = Array.isArray(runs) ? runs : [rn(runs)];
+    var cfg = { spacing: { after: after || 70 }, children: r };
+    if (align) cfg.alignment = align;
+    return new D.Paragraph(cfg);
+  }
+  function hr(c, sz) {
+    return new D.Paragraph({ spacing: { after: 0 }, border: { bottom: { style: D.BorderStyle.SINGLE, size: sz || 2, color: c || 'DDDDDD', space: 4 } }, children: [] });
+  }
+
+  function mkCell(w, fill, ch, brd) {
+    return new D.TableCell({
+      width: { size: w, type: D.WidthType.DXA },
+      shading: { fill: fill || 'FFFFFF', type: D.ShadingType.CLEAR },
+      borders: brd || { top: NO, bottom: NO, left: NO, right: NO },
+      margins: { top: 60, bottom: 60, left: 100, right: 80 },
+      children: ch
+    });
+  }
+
+  function mkRow(cells) { return new D.TableRow({ children: cells }); }
+  function mkTable(widths, rows) {
+    return new D.Table({ width: { size: 9026, type: D.WidthType.DXA }, columnWidths: widths, rows: rows });
+  }
+
+  function sectionHead(t) {
+    return new D.Paragraph({
+      spacing: { before: 160, after: 60 },
+      border: { bottom: { style: D.BorderStyle.SINGLE, size: 4, color: '1A5E9A', space: 4 } },
+      children: [rb(t, 18, '1A5E9A')]
+    });
+  }
+
+  return { rn: rn, rb: rb, ri: ri, sp: sp, pp: pp, hr: hr, mkCell: mkCell, mkRow: mkRow, mkTable: mkTable, sectionHead: sectionHead, NO: NO, TH: TH, BLB: BLB, NVB: NVB };
+}
+
+function dlWord(dest) {
+  if (!S.last || !S.last.text) { alert('Genera el analisis primero.'); return; }
+  if (dest === 'empresa') { dlWordEmpresa(); return; }
+  dlWordDirectivo();
+}
+
+function dlWordDirectivo() {
+  var L = S.last;
+  var fecha = document.getElementById('fecha').value;
+  var get = parseSections(L.text);
+  var D = docx;
+  var h = mkDocx([]);
+  var children = [];
+  function add(x) {
+    if (Array.isArray(x)) x.forEach(function(i) { if (i) children.push(i); });
+    else if (x) children.push(x);
+  }
+
+  add(h.mkTable([9026], [h.mkRow([h.mkCell(9026, '0D1B2A', [
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 14 }, children: [h.rb('RENDIR', 34, 'FFFFFF')] }),
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 50 }, children: [h.rn('ALTO RENDIMIENTO EJECUTIVO', 12, 'AABBCC')] }),
+    new D.Paragraph({ spacing: { after: 0 }, border: { bottom: { style: D.BorderStyle.SINGLE, size: 3, color: '1A5E9A', space: 4 } }, children: [] }),
+    h.sp(50),
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 14 }, children: [h.rb('ANALISIS DE CONTEXTO', 20, 'FFFFFF')] }),
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 12 }, children: [h.rb('Informe Individual \u00b7 Fase 1', 15, 'E8F0FA')] }),
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 0 }, children: [h.ri('Confidencial \u00b7 Destinatario: el directivo', 13, 'E8F0FA')] })
+  ])])]));
+  add(h.sp(100));
+
+  add(h.mkTable([2800, 300, 3626, 300, 2000], [h.mkRow([
+    h.mkCell(2800, 'FFFFFF', [h.pp([h.rb('Nombre: ', 15, '0D1B2A'), h.rn(L.nombre || '', 15)], 0)], { top: h.NO, bottom: h.TH, left: h.NO, right: h.NO }),
+    h.mkCell(300, 'FFFFFF', [h.pp([h.rn('', 14)], 0)]),
+    h.mkCell(3626, 'FFFFFF', [h.pp([h.rb('Empresa / Rol: ', 15, '0D1B2A'), h.rn((L.empresa || '') + ' \u00b7 ' + (L.cargo || ''), 15)], 0)], { top: h.NO, bottom: h.TH, left: h.NO, right: h.NO }),
+    h.mkCell(300, 'FFFFFF', [h.pp([h.rn('', 14)], 0)]),
+    h.mkCell(2000, 'FFFFFF', [h.pp([h.rb('Fecha: ', 15, '0D1B2A'), h.rn(fecha || '', 15)], 0)], { top: h.NO, bottom: h.TH, left: h.NO, right: h.NO })
+  ])]));
+  add(h.sp(100));
+  add(new D.Paragraph({ spacing: { after: 0 }, border: { bottom: { style: D.BorderStyle.SINGLE, size: 6, color: '0D1B2A', space: 4 } }, children: [] }));
+  add(h.sp(80));
+
+  add(h.sectionHead('NIVEL DE DEMANDA COGNITIVA DEL ENTORNO'));
+  add(h.sp(60));
+  var lvlD = [
+    { key: 'Baja demanda', bg: 'EAF4EE', fg: '2A6040', sub: 'Entorno de baja demanda' },
+    { key: 'Demanda moderada', bg: 'FFF8E1', fg: '7A5200', sub: 'Entorno de demanda moderada' },
+    { key: 'Alta demanda', bg: 'FFF0E6', fg: 'B84A00', sub: 'Entorno de alta demanda' },
+    { key: 'Demanda critica', bg: 'FDEEEA', fg: '8B1A00', sub: 'Entorno de demanda critica' }
+  ];
+  var lvlCells = lvlD.map(function(lv) {
+    var isM = lv.key === L.tag;
+    var brd = { style: D.BorderStyle.SINGLE, size: isM ? 6 : 2, color: isM ? lv.fg : 'DDDDDD' };
+    return h.mkCell(2256, lv.bg, [
+      new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 4 }, children: [h.rb(lv.key, 13, lv.fg)] }),
+      new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 0 }, children: [h.ri(lv.sub, 12, lv.fg)] })
+    ], { top: brd, bottom: brd, left: brd, right: brd });
+  });
+  add(h.mkTable([2256, 2257, 2257, 2256], [h.mkRow(lvlCells)]));
+  add(h.sp(80));
+
+  var diagText = get('DIAGNOSTICO DE CONTEXTO');
+  if (diagText) add(h.pp([h.rn(diagText, 17)], 100));
+
+  add(h.sectionHead('PERFIL DE CARGA COGNITIVA'));
+  add(h.sp(60));
+  var blockData = [
+    { label: 'Exposicion Ejecutiva', val: L.b.EXP },
+    { label: 'Fragmentacion Analitica', val: L.b.FRA },
+    { label: 'Ambiguedad Estrategica', val: L.b.AMB },
+    { label: 'Presion Temporal', val: L.b.TEM },
+    { label: 'Responsabilidad Sostenida', val: L.b.RES },
+    { label: 'Carga Relacional', val: L.b.EMO },
+    { label: 'Contexto Org. (carga)', val: L.b.CTX_carga }
+  ];
+  var maxVal = Math.max.apply(null, blockData.map(function(d) { return d.val; }));
+  var barRows = blockData.map(function(d) {
+    var isMax = d.val === maxVal;
+    var barW = Math.max(0, Math.round((d.val / 20) * 6226));
+    var restW = 6226 - barW;
+    var cells = [h.mkCell(2000, 'FFFFFF', [h.pp([h.rb(d.label, 14, isMax ? '1A5E9A' : '0D1B2A')], 0)])];
+    if (barW > 0) cells.push(h.mkCell(barW, isMax ? '1A5E9A' : '4A8BC8', [h.pp([h.rn('', 10)], 0)]));
+    if (restW > 0) cells.push(h.mkCell(restW, 'EEEEEE', [h.pp([h.rn('', 10)], 0)]));
+    cells.push(h.mkCell(800, 'FFFFFF', [new D.Paragraph({ alignment: D.AlignmentType.RIGHT, spacing: { after: 0 }, children: [h.rb(d.val + '/20', 13, isMax ? '1A5E9A' : '999999')] })]));
+    return h.mkRow(cells);
+  });
+  add(new D.Table({ width: { size: 9026, type: D.WidthType.DXA }, columnWidths: [2000, 6226, 800], rows: barRows }));
+  add(h.sp(60));
+
+  var patCell = h.mkCell(4393, 'E8F0FA', [
+    h.pp([h.rb('Patron de Carga Dominante: ', 14, '0D1B2A'), h.rb(L.patCode, 14, '1A5E9A')], 14),
+    h.pp([h.rn(L.patName, 14, '1A5E9A')], 14),
+    h.pp([h.rn('Dimensiones RENDIR: ' + (RD[L.patCode.split('+')[0]] || RD.EXP), 13)], 0)
+  ], { top: h.BLB, bottom: h.BLB, left: h.BLB, right: h.BLB });
+  var dispCell = h.mkCell(4393, 'F8F8F8', [
+    h.pp([h.rb('Indice de Dispersion', 14, '0D1B2A')], 14),
+    h.pp([h.rn('Total: ' + L.dt + ' pts \u2014 ' + L.dLabel, 14)], 10),
+    h.pp([h.rn('Demandas puras: ' + L.dp + ' pts \u2014 ' + L.dpLabel, 14)], 0)
+  ], { top: h.TH, bottom: h.TH, left: h.TH, right: h.TH });
+  add(h.mkTable([4393, 240, 4393], [h.mkRow([patCell, h.mkCell(240, 'FFFFFF', [h.pp([h.rn('', 14)], 0)]), dispCell])]));
+  add(h.sp(80));
+
+  var profileText = get('PERFIL DE CARGA COGNITIVA');
+  if (profileText) add(h.pp([h.rn(profileText, 17)], 100));
+
+  var ctxText = get('CONTEXTO AMPLIFICADOR');
+  if (ctxText) {
+    add(h.sectionHead('CONTEXTO AMPLIFICADOR'));
+    add(h.sp(60));
+    add(h.pp([h.rn(ctxText, 17)], 100));
+  }
+
+  var sigText = get('SENALES OBSERVADAS EN ENTREVISTA');
+  if (sigText) {
+    add(h.sectionHead('SENALES OBSERVADAS EN ENTREVISTA'));
+    add(h.sp(60));
+    add(h.pp([h.rn(sigText, 17)], 100));
+  }
+
+  add(h.sectionHead('LO QUE LA EVALUACION RENDIR ENCONTRARA'));
+  add(h.sp(60));
+  add(h.pp([h.rn(get('LO QUE LA EVALUACION RENDIR ENCONTRARA') || '[Editar]', 17)], 100));
+
+  var propText = get('PROPUESTA DE VALORACION') || '[Editar]';
+  add(h.mkTable([9026], [h.mkRow([h.mkCell(9026, '0D1B2A', [h.pp([h.rb('PROPUESTA DE VALORACION', 16, 'FFFFFF')], 18), h.pp([h.rn(propText, 16, 'E8F0FA')], 0)])])]));
+  add(h.sp(100));
+  add(h.hr('DDDDDD', 2));
+  add(h.sp(50));
+  add(new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 0 }, children: [h.rb('RENDIR  |  ALTO RENDIMIENTO EJECUTIVO', 13, '0D1B2A'), h.rn('    ', 12), h.ri('rendir@rendir-altorendimiento.com  \u00b7  +34 637 671 768  \u00b7  www.rendir-altorendimiento.com', 13)] }));
+
+  var doc = new D.Document({ sections: [{ properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 900, right: 900, bottom: 900, left: 900 } } }, children: children }] });
+  D.Packer.toBuffer(doc).then(function(buf) {
+    var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'RENDIR_Directivo_' + (L.nombre || 'evaluado').replace(/\s+/g, '_') + '_' + (fecha || '2025') + '.docx';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+function dlWordEmpresa() {
+  if (!S.last || !S.last.text) { alert('Genera el analisis primero.'); return; }
+  var L = S.last;
+  var fecha = document.getElementById('fecha').value;
+  var get = parseSections(L.text);
+  var D = docx;
+  var h = mkDocx([]);
+  var children = [];
+  function add(x) {
+    if (Array.isArray(x)) x.forEach(function(i) { if (i) children.push(i); });
+    else if (x) children.push(x);
+  }
+
+  add(h.mkTable([9026], [h.mkRow([h.mkCell(9026, '0D1B2A', [
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 14 }, children: [h.rb('RENDIR', 34, 'FFFFFF')] }),
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 50 }, children: [h.rn('ALTO RENDIMIENTO EJECUTIVO', 12, 'AABBCC')] }),
+    new D.Paragraph({ spacing: { after: 0 }, border: { bottom: { style: D.BorderStyle.SINGLE, size: 3, color: '1A5E9A', space: 4 } }, children: [] }),
+    h.sp(50),
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 14 }, children: [h.rb('ANALISIS DE CONTEXTO EJECUTIVO', 20, 'FFFFFF')] }),
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 12 }, children: [h.rb('Informe para la Empresa \u00b7 Fase 1', 15, 'E8F0FA')] }),
+    new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 0 }, children: [h.ri('Confidencial \u00b7 Uso exclusivo de la organizaci\u00f3n', 13, 'E8F0FA')] })
+  ])])]));
+  add(h.sp(100));
+
+  add(h.mkTable([2800, 300, 3626, 300, 2000], [h.mkRow([
+    h.mkCell(2800, 'FFFFFF', [h.pp([h.rb('Directivo/a: ', 15, '0D1B2A'), h.rn(L.nombre || '', 15)], 0)], { top: h.NO, bottom: h.TH, left: h.NO, right: h.NO }),
+    h.mkCell(300, 'FFFFFF', [h.pp([h.rn('', 14)], 0)]),
+    h.mkCell(3626, 'FFFFFF', [h.pp([h.rb('Empresa / Rol: ', 15, '0D1B2A'), h.rn((L.empresa || '') + ' \u00b7 ' + (L.cargo || ''), 15)], 0)], { top: h.NO, bottom: h.TH, left: h.NO, right: h.NO }),
+    h.mkCell(300, 'FFFFFF', [h.pp([h.rn('', 14)], 0)]),
+    h.mkCell(2000, 'FFFFFF', [h.pp([h.rb('Fecha: ', 15, '0D1B2A'), h.rn(fecha || '', 15)], 0)], { top: h.NO, bottom: h.TH, left: h.NO, right: h.NO })
+  ])]));
+  add(h.sp(100));
+  add(new D.Paragraph({ spacing: { after: 0 }, border: { bottom: { style: D.BorderStyle.SINGLE, size: 6, color: '0D1B2A', space: 4 } }, children: [] }));
+  add(h.sp(80));
+
+  add(h.mkTable([9026], [h.mkRow([h.mkCell(9026, 'E8F0FA', [
+    h.pp([h.rb('Sobre este informe: ', 14, '0D1B2A'), h.rn('El Analisis de Contexto RENDIR mide la demanda cognitiva que genera el entorno sobre el directivo: la complejidad del rol, las condiciones organizacionales y el nivel de exigencia del puesto. No evalua el estado cognitivo del directivo \u2014 eso es lo que mide la evaluacion RENDIR en la siguiente fase.', 14)], 0)
+  ], { top: h.BLB, bottom: h.BLB, left: h.BLB, right: h.BLB })])]));
+  add(h.sp(100));
+
+  add(h.sectionHead('NIVEL DE DEMANDA DEL ENTORNO'));
+  add(h.sp(60));
+  var lvlE = [
+    { key: 'Baja demanda', bg: 'EAF4EE', fg: '2A6040', sub: 'El rol no genera presion estructural significativa' },
+    { key: 'Demanda moderada', bg: 'FFF8E1', fg: '7A5200', sub: 'El rol genera presion incipiente \u2014 momento optimo para evaluar' },
+    { key: 'Alta demanda', bg: 'FFF0E6', fg: 'B84A00', sub: 'El rol genera una exigencia objetivamente alta y sostenida' },
+    { key: 'Demanda critica', bg: 'FDEEEA', fg: '8B1A00', sub: 'Las condiciones superan los umbrales de sostenibilidad a largo plazo' }
+  ];
+  var lvlCells2 = lvlE.map(function(lv) {
+    var isM = lv.key === L.tag;
+    var brd = { style: D.BorderStyle.SINGLE, size: isM ? 6 : 2, color: isM ? lv.fg : 'DDDDDD' };
+    return h.mkCell(2256, lv.bg, [
+      new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 4 }, children: [h.rb(lv.key, 13, lv.fg)] }),
+      new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 0 }, children: [h.ri(lv.sub, 11, lv.fg)] })
+    ], { top: brd, bottom: brd, left: brd, right: brd });
+  });
+  add(h.mkTable([2256, 2257, 2257, 2256], [h.mkRow(lvlCells2)]));
+  add(h.sp(80));
+
+  add(h.sectionHead('DIAGNOSTICO DE CONTEXTO'));
+  add(h.sp(60));
+  var diagE = get('DIAGNOSTICO DE CONTEXTO');
+  if (diagE) add(h.pp([h.rn(diagE, 17)], 100));
+
+  add(h.sectionHead('PERFIL DE DEMANDA DEL ROL'));
+  add(h.sp(60));
+  var iecColors = { 'Baja demanda': ['EAF4EE','2A6040'], 'Demanda moderada': ['FFF8E1','7A5200'], 'Alta demanda': ['FFF0E6','B84A00'], 'Demanda critica': ['FDEEEA','8B1A00'] };
+  var iec2 = iecColors[L.tag] || ['F8F8F8','555555'];
+  add(h.mkTable([3000, 3013, 3013], [h.mkRow([
+    h.mkCell(3000, iec2[0], [h.pp([h.rb('Nivel de demanda', 13, iec2[1])], 16), h.pp([h.rb(L.tag || '', 18, iec2[1])], 0)], { top: h.TH, bottom: h.TH, left: h.TH, right: h.TH }),
+    h.mkCell(3013, 'F8F8F8', [h.pp([h.rb('Patron de carga', 13, '0D1B2A')], 16), h.pp([h.rn(L.patName || '', 15, '1A5E9A')], 0)], { top: h.TH, bottom: h.TH, left: h.TH, right: h.TH }),
+    h.mkCell(3013, 'F8F8F8', [h.pp([h.rb('Distribucion', 13, '0D1B2A')], 16), h.pp([h.rn(L.dLabel || '', 15)], 0)], { top: h.TH, bottom: h.TH, left: h.TH, right: h.TH })
+  ])]));
+  add(h.sp(60));
+  var profE = get('PERFIL DE CARGA COGNITIVA');
+  if (profE) add(h.pp([h.rn(profE, 17)], 100));
+
+  var ctxE = get('CONTEXTO AMPLIFICADOR');
+  if (ctxE) {
+    add(h.sectionHead('FACTORES ORGANIZACIONALES'));
+    add(h.sp(60));
+    add(h.pp([h.rn(ctxE, 17)], 100));
+  }
+
+  var propE = get('PROPUESTA DE VALORACION') || '[Editar]';
+  add(h.mkTable([9026], [h.mkRow([h.mkCell(9026, '0D1B2A', [h.pp([h.rb('PROPUESTA DE VALORACION', 16, 'FFFFFF')], 18), h.pp([h.rn(propE, 16, 'E8F0FA')], 0)])])]));
+  add(h.sp(80));
+
+  add(h.mkTable([9026], [h.mkRow([h.mkCell(9026, 'F8F8F8', [
+    h.pp([h.ri('Este informe ha sido elaborado a partir de un cuestionario completado por el directivo y de una entrevista de contexto. El Analisis de Contexto no evalua el desempeno profesional del directivo ni su situacion personal. Toda la informacion de caracter personal es confidencial y de uso exclusivo del evaluador.', 13)], 0)
+  ], { top: h.TH, bottom: h.TH, left: h.TH, right: h.TH })])]));
+  add(h.sp(80));
+  add(h.hr('DDDDDD', 2));
+  add(h.sp(50));
+  add(new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 0 }, children: [h.rb('RENDIR  |  ALTO RENDIMIENTO EJECUTIVO', 13, '0D1B2A'), h.rn('    ', 12), h.ri('rendir@rendir-altorendimiento.com  \u00b7  +34 637 671 768  \u00b7  www.rendir-altorendimiento.com', 13)] }));
+
+  var doc = new D.Document({ sections: [{ properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 900, right: 900, bottom: 900, left: 900 } } }, children: children }] });
+  D.Packer.toBuffer(doc).then(function(buf) {
+    var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'RENDIR_Empresa_' + (L.nombre || 'evaluado').replace(/\s+/g, '_') + '_' + (fecha || '2025') + '.docx';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+function dlWordOrg() {
+  if (!S.lastOrg) { alert('Genera el analisis organizacional primero.'); return; }
+  var LO = S.lastOrg;
+  var fecha = new Date().toISOString().split('T')[0];
+  var get = parseSections(LO.text);
+  var D = docx;
+  var h = mkDocx([]);
+
+  var children = [];
+  function add(x) {
+    if (Array.isArray(x)) x.forEach(function(i) { if (i) children.push(i); });
+    else if (x) children.push(x);
+  }
+
+  // Header
+  add(h.mkTable([9026], [h.mkRow([
+    h.mkCell(9026, '0D1B2A', [
+      new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 14 }, children: [h.rb('RENDIR', 32, 'FFFFFF')] }),
+      new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 50 }, children: [h.rn('ALTO RENDIMIENTO EJECUTIVO', 12, 'AABBCC')] }),
+      new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 12 }, children: [h.rb('ANALISIS ORGANIZACIONAL · FASE 1', 19, 'FFFFFF')] }),
+      new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 0 }, children: [h.ri('Documento confidencial · Uso exclusivo del destinatario', 13, 'E8F0FA')] })
+    ])
+  ])]));
+  add(h.sp(100));
+  add(h.pp([h.rb('Empresa: ', 15, '0D1B2A'), h.rn(LO.empresa || '', 15), h.rn('   ', 13), h.rb('Evaluados: ', 15, '0D1B2A'), h.rn(LO.evs.length + ' directivos', 15), h.rn('   ', 13), h.rb('Fecha: ', 15, '0D1B2A'), h.rn(fecha, 15)], 80));
+  add(new D.Paragraph({ spacing: { after: 0 }, border: { bottom: { style: D.BorderStyle.SINGLE, size: 6, color: '0D1B2A', space: 4 } }, children: [] }));
+  add(h.sp(80));
+
+  // Team table
+  add(h.sectionHead('EQUIPO DIRECTIVO EVALUADO'));
+  add(h.sp(60));
+  var evHdr = h.mkRow([
+    h.mkCell(2600, '0D1B2A', [h.pp([h.rb('Directivo/a', 14, 'FFFFFF')], 0)]),
+    h.mkCell(1800, '0D1B2A', [h.pp([h.rb('Nivel', 14, 'FFFFFF')], 0)]),
+    h.mkCell(1600, '0D1B2A', [h.pp([h.rb('Patron', 14, 'FFFFFF')], 0)]),
+    h.mkCell(1600, '0D1B2A', [h.pp([h.rb('Riesgo', 14, 'FFFFFF')], 0)]),
+    h.mkCell(1426, '0D1B2A', [h.pp([h.rb('PER', 14, 'FFFFFF')], 0)])
+  ]);
+  var evRows = LO.evs.map(function(e, i) {
+    var fill = i % 2 === 0 ? 'F8F8F8' : 'FFFFFF';
+    var fg = lvlFgHex(e.iec);
+    return h.mkRow([
+      h.mkCell(2600, fill, [h.pp([h.rb(e.nombre, 14)], 4), h.pp([h.rn(e.cargo, 13, '999999')], 0)], { top: h.TH, bottom: h.TH, left: h.NO, right: h.NO }),
+      h.mkCell(1800, fill, [h.pp([h.rb(e.nivel, 13, fg)], 0)], { top: h.TH, bottom: h.TH, left: h.NO, right: h.NO }),
+      h.mkCell(1600, fill, [h.pp([h.rn(e.patCode, 13, '1A5E9A')], 0)], { top: h.TH, bottom: h.TH, left: h.NO, right: h.NO }),
+      h.mkCell(1600, fill, [h.pp([h.rn(e.origen || '-', 13)], 0)], { top: h.TH, bottom: h.TH, left: h.NO, right: h.NO }),
+      h.mkCell(1426, fill, [h.pp([h.rn(e.per && e.per.sum >= 5 ? 'Carga' : '-', 13, e.per && e.per.sum >= 5 ? '7A5200' : '555555')], 0)], { top: h.TH, bottom: h.TH, left: h.NO, right: h.NO })
+    ]);
+  });
+  add(h.mkTable([2600, 1800, 1600, 1600, 1426], [evHdr].concat(evRows)));
+  add(h.sp(100));
+
+  var sNames = ['PERFIL ORGANIZACIONAL','PATRONES SISTEMICOS IDENTIFICADOS','EVALUADOS EN ZONA DE RIESGO','DIAGNOSTICO ORGANIZACIONAL','PROPUESTA PARA LA EMPRESA'];
+  sNames.forEach(function(sn) {
+    var t = get(sn);
+    if (!t) return;
+    add(h.sectionHead(sn));
+    add(h.sp(60));
+    if (sn === 'PROPUESTA PARA LA EMPRESA') {
+      add(h.mkTable([9026], [h.mkRow([
+        h.mkCell(9026, '0D1B2A', [
+          h.pp([h.rb('PROPUESTA PARA LA EMPRESA', 16, 'FFFFFF')], 18),
+          h.pp([h.rn(t, 16, 'E8F0FA')], 0)
+        ])
+      ])]));
+    } else {
+      add(h.pp([h.rn(t, 17)], 80));
+    }
+  });
+
+  add(h.sp(80));
+  add(h.hr('DDDDDD', 2));
+  add(h.sp(50));
+  add(new D.Paragraph({ alignment: D.AlignmentType.CENTER, spacing: { after: 0 }, children: [h.rb('RENDIR  |  ALTO RENDIMIENTO EJECUTIVO', 13, '0D1B2A'), h.rn('    ', 12), h.ri('rendir@rendir-altorendimiento.com  ·  +34 637 671 768  ·  www.rendir-altorendimiento.com', 13)] }));
+
+  var doc = new D.Document({ sections: [{ properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 900, right: 900, bottom: 900, left: 900 } } }, children: children }] });
+  D.Packer.toBuffer(doc).then(function(buf) {
+    var blob = new Blob([buf], { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'RENDIR_Informe_Org_' + (LO.empresa || 'empresa').replace(/\s+/g, '_') + '_' + fecha + '.docx';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+}
+
+</script>
+</body>
+</html>
