@@ -1153,72 +1153,79 @@ function showFinal() {
 
 function sendEmail(sumas) {
   try {
-    // Google Form entry IDs
-    const FORM_ACTION = 'https://docs.google.com/forms/d/e/1FAIpQLSc2n5obaomgMDZrWPazpwO2dJjARCaXBEyFyr-UaOh5xqdSoQ/formResponse';
+    const ENDPOINT = 'https://script.google.com/macros/s/AKfycbxbFDHRVFXV7EfQKtATb8VqEOTHXP19h-Pl1a_2ycHbYhaZOL2kFKZXOXgdnco26pXv9Q/exec';
+    const fecha = new Date().toLocaleDateString('es-ES', {day:'2-digit', month:'long', year:'numeric'});
 
-    const ENTRY = {
-      nombre:  'entry.1419442472',
-      empresa: 'entry.1328624463',
-      cargo:   'entry.12404887',
-      'EXP-1': 'entry.1771814485',
-      'EXP-2': 'entry.41741853',
-      'EXP-3': 'entry.228783044',
-      'EXP-4': 'entry.681073125',
-      'EXP-5': 'entry.818523880',
-      'FRA-1': 'entry.501940708',
-      'FRA-2': 'entry.1812662523',
-      'FRA-3': 'entry.371287355',
-      'FRA-4': 'entry.978144799',
-      'FRA-5': 'entry.514298144',
-      'AMB-1': 'entry.1560048723',
-      'AMB-2': 'entry.492897645',
-      'AMB-3': 'entry.1549869605',
-      'AMB-4': 'entry.1698240849',
-      'AMB-5': 'entry.1752937780',
-      'TEM-1': 'entry.184696836',
-      'TEM-2': 'entry.810321360',
-      'TEM-3': 'entry.932451847',
-      'TEM-4': 'entry.800801009',
-      'TEM-5': 'entry.1534513468',
-      'RES-1': 'entry.477709304',
-      'RES-2': 'entry.1185280599',
-      'RES-3': 'entry.1299036265',
-      'RES-4': 'entry.1067939257',
-      'RES-5': 'entry.1462526156',
-      'EMO-1': 'entry.914268575',
-      'EMO-2': 'entry.2086036066',
-      'EMO-3': 'entry.1756158588',
-      'EMO-4': 'entry.1369431331',
-      'EMO-5': 'entry.186593078',
-      'CTX-1': 'entry.1250367461',
-      'CTX-2': 'entry.1213036293',
-      'CTX-3': 'entry.1478743810',
-      'CTX-4': 'entry.243997982',
-      'CTX-5': 'entry.535993333',
-    };
-
-    // Build form data
-    const fd = new FormData();
-    fd.append(ENTRY.nombre,  userData.nombre  || '—');
-    fd.append(ENTRY.empresa, userData.empresa || '—');
-    fd.append(ENTRY.cargo,   userData.cargo   || '—');
-
+    // Respuestas individuales por código de pregunta
+    const resp = {};
     PREGUNTAS.forEach((q, i) => {
-      const entryKey = ENTRY[q.cod];
-      if (!entryKey) return;
-      const val = answers[i];
-      const optTexto = (val !== null && val !== undefined) ? q.opts[val] : '—';
-      fd.append(entryKey, '[' + val + '] ' + optTexto);
+      resp[q.cod.replace('-','_')] = (answers[i] !== null && answers[i] !== undefined) ? answers[i] : '';
     });
 
-    // Send to Google Forms (no-cors because Google doesn't allow CORS)
-    fetch(FORM_ACTION, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: fd,
-    })
-    .then(() => console.log('Respuestas enviadas a Google Forms'))
-    .catch(err => console.warn('Error al enviar:', err));
+    // PER — se leen de las respuestas finales si existen (pantalla PER)
+    const perData = {
+      PER1: typeof perAnswers !== 'undefined' ? (perAnswers[0] ?? '') : '',
+      PER2: typeof perAnswers !== 'undefined' ? (perAnswers[1] ?? '') : '',
+      PER3: typeof perAnswers !== 'undefined' ? (perAnswers[2] ?? '') : '',
+      PER4: typeof perAnswers !== 'undefined' ? (perAnswers[3] ?? '') : '',
+      PER5: typeof perAnswers !== 'undefined' ? (perAnswers[4] ?? '') : '',
+    };
+
+    const data = {
+      fecha:    fecha,
+      nombre:   userData.nombre  || '',
+      empresa:  userData.empresa || '',
+      cargo:    userData.cargo   || '',
+      // Respuestas individuales
+      EXP1: resp['EXP_1'], EXP2: resp['EXP_2'], EXP3: resp['EXP_3'], EXP4: resp['EXP_4'], EXP5: resp['EXP_5'],
+      FRA1: resp['FRA_1'], FRA2: resp['FRA_2'], FRA3: resp['FRA_3'], FRA4: resp['FRA_4'], FRA5: resp['FRA_5'],
+      AMB1: resp['AMB_1'], AMB2: resp['AMB_2'], AMB3: resp['AMB_3'], AMB4: resp['AMB_4'], AMB5: resp['AMB_5'],
+      TEM1: resp['TEM_1'], TEM2: resp['TEM_2'], TEM3: resp['TEM_3'], TEM4: resp['TEM_4'], TEM5: resp['TEM_5'],
+      RES1: resp['RES_1'], RES2: resp['RES_2'], RES3: resp['RES_3'], RES4: resp['RES_4'], RES5: resp['RES_5'],
+      EMO1: resp['EMO_1'], EMO2: resp['EMO_2'], EMO3: resp['EMO_3'], EMO4: resp['EMO_4'], EMO5: resp['EMO_5'],
+      CTX1: resp['CTX_1'], CTX2: resp['CTX_2'], CTX3: resp['CTX_3'], CTX4: resp['CTX_4'], CTX5: resp['CTX_5'],
+      // PER
+      PER1: perData.PER1, PER2: perData.PER2, PER3: perData.PER3, PER4: perData.PER4, PER5: perData.PER5,
+      // Sumas por bloque
+      suma_EXP: sumas.find(s=>s.nombre==='EXP')?.total ?? '',
+      suma_FRA: sumas.find(s=>s.nombre==='FRA')?.total ?? '',
+      suma_AMB: sumas.find(s=>s.nombre==='AMB')?.total ?? '',
+      suma_TEM: sumas.find(s=>s.nombre==='TEM')?.total ?? '',
+      suma_RES: sumas.find(s=>s.nombre==='RES')?.total ?? '',
+      suma_EMO: sumas.find(s=>s.nombre==='EMO')?.total ?? '',
+      suma_CTX: sumas.find(s=>s.nombre==='CTX')?.total ?? '',
+    };
+
+    // Envío via iframe oculto — sin restricciones CORS en todos los navegadores
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = ENDPOINT;
+    form.target = 'hidden_iframe';
+    form.style.display = 'none';
+
+    // Convertir cada campo a input hidden
+    Object.entries(data).forEach(([key, val]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = val !== null && val !== undefined ? String(val) : '';
+      form.appendChild(input);
+    });
+
+    // Iframe oculto para absorber la respuesta sin redirigir
+    let iframe = document.getElementById('hidden_iframe');
+    if (!iframe) {
+      iframe = document.createElement('iframe');
+      iframe.name = 'hidden_iframe';
+      iframe.id = 'hidden_iframe';
+      iframe.style.display = 'none';
+      document.body.appendChild(iframe);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+    setTimeout(() => form.remove(), 3000);
+    console.log('Respuestas enviadas a Google Sheets');
 
   } catch(e) {
     console.warn('sendEmail error:', e);
